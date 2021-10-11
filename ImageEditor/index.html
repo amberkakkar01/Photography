@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photon - Image Editor</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" integrity="sha512-5A8nwdMOWrSz20fDsjczgUidUBR8liPYU+WymTZP1lmY9G6Oc7HlZv156XqnsgNUzTyMefFTcsFH/tnJE/+xBg==" crossorigin="anonymous" />
+        
+        <script src="https://use.fontawesome.com/releases/v5.15.2/js/all.js" data-auto-replace-svg="nest"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="image-editor.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="script.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-light " style="font-size: 25px; font-family: sans-serif; background-color: dodgerblue;color:white;">
+        <img src="/ImageEditor/logo.png" width="130" height="60"
+            class="d-inline-block align-top" alt="">
+        Photon - Image Editor
+    </nav>
+    
+    
+
+    <div id="container">
+        <div class="text_box">
+            <div id="imageEditor">
+                <section id="editorContainer">
+                    <canvas id="editor"></canvas>
+                </section>
+            </div>
+            <section id="toolbar">
+                <button id="upload" class="btn btn-success" title="Upload">Upload</button>
+                <button id="save" class="btn btn-danger" title="Save">Save</button>
+                <br>
+                <br>
+                <button id="flipHor" class="btn btn-info" title="Flip Horizontally">Flip Horizontally</button>
+                <button id="flipVert" class="btn btn-info" title="Flip vertically">Flip vertically</button>
+                <br>
+                <br>
+                <button id="rotateL" class="btn btn-info" title="Rotate left">Rotate Left</button>
+                <button id="rotateR" class="btn btn-info" title="Rotate right">Rotate Right</button>
+                <br>
+                <br>
+                <button id="resize" class="btn btn-info" title="Resize">Resize</button>
+                <button id="greyscale" class="btn btn-info" title="Convert to grayscale">Grayscale</button>
+                <br>
+                <br>
+                <!--<div class="container1">
+            <div class="brightness">
+               <i class="far fa-sun"></i>
+               <input type="range" id="range" min="10" max="200" value="100">
+               <i class="fas fa-sun"></i>     
+                <br>-->
+                <!--<i class="far fa-sun"></i>
+                <input type="range" min="0" max="200" value="100" step="1" onchange="applyFilter()" data-filter="brightness" data-scale="%">
+                <i class="fas fa-sun"></i> 
+                <br>  
+                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-circle-half" viewBox="0 0 16 16">
+  <path d="M8 15A7 7 0 1 0 8 1v14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z"/>
+</svg>
+                <input type="range" min="0" max="200" value="100" step="1" onchange="applyFilter()" data-filter="contrast" data-scale="%">
+                <br>  
+                <i class="fas fa-tint"></i>
+                <input type="range" min="0" max="100" value="0" step="1" onchange="applyFilter()" data-filter="blur" data-scale="px">
+                <i class="fal fa-tint"></i>
+                <br>  
+                                   
+                                    -->
+           <!-- </div>
+        </div>-->
+            <label>Blur</label>
+	<input type="range" min="0" max="100" value="0" step="1" onchange="applyFilter()" data-filter="blur" data-scale="px"><br>
+	<label>Brightness</label>
+	<input type="range" min="0" max="200" value="100" step="1" onchange="applyFilter()" data-filter="brightness" data-scale="%"><br>
+	<label>Contrast</label>
+	<input type="range" min="0" max="200" value="100" step="1" onchange="applyFilter()" data-filter="contrast" data-scale="%"><br>
+    <label>Grayscale</label>
+    <input type="range" min="0" max="100" value="0" step="1" onchange="applyFilter()" data-filter="grayscale" data-scale="%"><br>
+    <label>Hue Rotate</label>
+    <input type="range" min="0" max="360" value="0" step="1" onchange="applyFilter()" data-filter="hue-rotate" data-scale="deg"><br>
+    <label>Invert</label>
+    <input type="range" min="0" max="100" value="0" step="1" onchange="applyFilter()" data-filter="invert" data-scale="%"><br>
+    <label>Opacity</label>
+    <input type="range" min="0" max="100" value="100" step="1" onchange="applyFilter()" data-filter="opacity" data-scale="%"><br>
+    <label>Saturate</label>
+    <input type="range" min="1" max="100" value="0" step="1" onchange="applyFilter()" data-filter="saturate" data-scale=""><br>
+    <label>Sepia</label>
+    <input type="range" min="0" max="100" value="0" step="1" onchange="applyFilter()" data-filter="sepia" data-scale="%"><br>
+            </section>
+        </div>
+
+    </div>
+    <script type="text/javascript">
+		var image = document.querySelector("#editor");
+		var filterControls = document.querySelectorAll('input[type=range]');
+		function applyFilter() {
+			var computedFilters = '';
+			filterControls.forEach(function(item, index) {
+				computedFilters += item.getAttribute('data-filter') + '(' + item.value + item.getAttribute('data-scale') + ') ';
+			});
+			image.style.filter = computedFilters;
+		};
+	</script>    
+    
+    <!--<script>
+        brightnessInput = document.querySelector("#range");
+        container= document.querySelector("#editor");
+        brightnessInput.addEventListener("change",()=> {
+           container.style.filter = "brightness("+ brightnessInput.value + "%)"; 
+        });
+    </script>-->
+    
+</body>
+
+</html>
+
+
+<!--
+This code will draw line on the screen from (0,0) to (200,100)
+
+<script>
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+    ctx.moveTo(0,0);
+    ctx.lineTo(200,100);
+    ctx.stroke();
+</script>
+-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
